@@ -7,8 +7,10 @@ import { loadSession } from "../../lib/session";
 
 export default function Page({
   isReplicatedEnabled,
+    isKOTSManaged,
 }: {
   isReplicatedEnabled: boolean;
+  isKOTSManaged: boolean;
 }) {
   const supportBundlePluginCmd = "curl https://krew.sh/support-bundle | bash";
   const collectSupportBundleCmd = "kubectl support-bundle --load-cluster-specs";
@@ -82,6 +84,7 @@ Page.getLayout = function getLayout(page: any) {
       currentPage="support"
       isUpdateAvailable={undefined}
       isReplicatedEnabled={page.props.isReplicatedEnabled}
+      isKOTSManaged={page.props.isKOTSManaged}
     >
       {page}
     </AdminLayout>
@@ -115,10 +118,12 @@ export async function getServerSideProps(ctx: {
     }
 
     const isReplicatedEnabled = process.env.REPLICATED_ENABLED === "true";
+    const isKOTSManaged = process.env.REPLICATED_KOTS_MANAGED === "true";
 
     return {
       props: {
         isReplicatedEnabled,
+        isKOTSManaged,
       },
     };
   }

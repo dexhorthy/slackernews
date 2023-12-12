@@ -377,6 +377,7 @@ Page.getLayout = function getLayout(page: any) {
       currentPage="updates"
       isUpdateAvailable={undefined}
       isReplicatedEnabled={page.props.isReplicatedEnabled}
+      isKOTSManaged={page.props.isKOTSManaged}
     >
       {page}
     </AdminLayout>
@@ -418,6 +419,7 @@ export async function getServerSideProps(ctx: {
     const versionHistory = await ReplicatedClient.getVersionHistory();
 
     const isReplicatedEnabled = process.env.REPLICATED_ENABLED === "true";
+    const isKOTSManaged = process.env.REPLICATED_KOTS_MANAGED === "true";
 
     return {
       props: {
@@ -429,6 +431,7 @@ export async function getServerSideProps(ctx: {
         upgradeCmd,
         isReplicatedEnabled,
         versionHistory,
+        isKOTSManaged,
       },
     };
   }
