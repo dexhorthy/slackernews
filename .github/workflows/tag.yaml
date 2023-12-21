@@ -38,7 +38,8 @@ jobs:
                 type=ref,event=branch
                 type=ref,event=tag
                 type=ref,event=pr
-          images: ${{ env.REGISTRY }}/slackernews/slackernews-web
+            # todo make configurable
+          images: ${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web
 
       - uses: int128/docker-build-cache-config-action@v1
         id: cache
@@ -85,7 +86,7 @@ jobs:
         with:
           include: 'chart/slackernews/values.yaml'
           find: '$IMAGE'
-          replace: 'proxy/slackernews/ghcr.io/slackernews/slackernews-web:${{ steps.get_version.outputs.version-without-v }}'
+          replace: 'proxy/${{ secrets.REPLICATED_APP }}/ghcr.io/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:${{ steps.get_version.outputs.version-without-v }}'
           regex: false
 
       - id: package-helm-chart
