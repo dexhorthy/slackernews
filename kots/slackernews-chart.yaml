@@ -12,6 +12,7 @@ spec:
   # these values will be supplied to helm template
   values:
     postgres:
+      deploy_postgres: repl{{ ConfigOption "deploy_postgres" | ParseBool }}
       password: repl{{ ConfigOption "postgres_password"}}
     slack:
       botToken: repl{{ ConfigOption "slack_bot_token" }}
