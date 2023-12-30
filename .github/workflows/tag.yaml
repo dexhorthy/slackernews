@@ -76,8 +76,7 @@ jobs:
         with:
           include: 'chart/slackernews/values.yaml'
           find: '$REGISTRY'
-          replace: >
-            ${{ secrets.PROXY_REGISTRY_CNAME != "" ? secrets.PROXY_REGISTRY_CNAME : "proxy.replicated.com" }}
+          replace: ${{ secrets.PROXY_REGISTRY_CNAME || 'proxy.replicated.com' }}
           regex: false
       - name: Update the values.yaml with the image path
         uses: jacobtomlinson/gha-find-replace@v2
