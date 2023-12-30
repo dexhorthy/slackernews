@@ -12,6 +12,7 @@ spec:
   # these values will be supplied to helm template
   values:
     postgres:
+      enabled: repl{{ ConfigOption "deploy_postgres" | ParseBool }}
       deploy_postgres: repl{{ ConfigOption "deploy_postgres" | ParseBool }}
       password: repl{{ ConfigOption "postgres_password"}}
       uri: repl{{ ConfigOption "postgres_external_uri" }}
