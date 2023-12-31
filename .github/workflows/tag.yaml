@@ -79,14 +79,6 @@ jobs:
           replace: ${{ secrets.REPLICATED_PROXY_REGISTRY_CNAME || 'proxy.replicated.com' }}
           regex: false
 
-#      - name: Update the KOTS HelmChart CR with the registry name
-#        uses: jacobtomlinson/gha-find-replace@v2
-#        with:
-#          include: 'kots/slackernews-chart.yaml'
-#          find: '$REGISTRY'
-#          replace: ${{ secrets.REPLICATED_PROXY_REGISTRY_CNAME || 'proxy.replicated.com' }}
-#          regex: false
-
       - name: Update the values.yaml with the image path
         uses: jacobtomlinson/gha-find-replace@v2
         with:
@@ -95,9 +87,7 @@ jobs:
           replace: 'proxy/${{ secrets.REPLICATED_APP }}/ghcr.io/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:${{ steps.get_version.outputs.version-without-v }}'
           regex: false
 
-
-      # there has *got* to be a better way to do this
-      - name: Update the KOTS HelmChart CR with a template for the full image path
+      - name: Update the KOTS HelmChart CR with the image path
         uses: jacobtomlinson/gha-find-replace@v2
         with:
           include: 'kots/slackernews-chart.yaml'

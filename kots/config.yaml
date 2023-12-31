@@ -6,9 +6,9 @@ spec:
   groups:
     - name: postgres
       description: >
-        This section can be used to configure the postgresql database required by slackernews. You
+        This section can be used to configure the postgresql database required by SlackerNews. You
         can either deploy postgresql in the cluster or provide an external URI to an existing postgresql instance
-        that you will use for slackernews.
+        that you will use for SlackerNews.
       title: Postgresql
       items:
         - name: deploy_postgres
@@ -30,15 +30,15 @@ spec:
     - name: tls_and_ingress
       title: TLS and Ingress
       description: |
-        You can customize how you will expose slackernews to the internet.
+        You can customize how you will expose SlackerNews to the internet.
         Note that the domain you use will need to be publicly addressable with certs signed by a public authority 
         so it can receive webhooks from Slack.
         
         Common configurations include
-            1. Using a Cluster IP and configuring your existing ingress controller to route traffic to slackernews
-            2. Using a NodePort and configuring an existing load balancer to route traffic to slackernews
+            1. Using a Cluster IP and configuring your existing ingress controller to route traffic to SlackerNews
+            2. Using a NodePort and configuring an existing load balancer to route traffic to SlackerNews
             3. Using a LoadBalancer service and letting Kubernetes provision a load balancer for you
-            4. Deploying the included nginx service to handle TLS and proxying traffic to slackernews, and exposing that with a ClusterIP, NodePort, or LoadBalancer
+            4. Deploying the included nginx service to handle TLS and proxying traffic to SlackerNews, and exposing that with a ClusterIP, NodePort, or LoadBalancer
         
         If you choose option (4), you'll see that this page has been pre-populated with domains and self-signed certificates. 
         If you want, you can replace the self-signed certificates with your own.
@@ -48,7 +48,7 @@ spec:
       items:
         - name: slackernews_domain
           title: Ingress Hostname
-          help_text: The domain name at which you'll access slackernews. Don't include the `https://` or any path elements.
+          help_text: The domain name at which you'll access SlackerNews. Don't include the `https://` or any path elements.
           type: text
           required: true
         - name: slackernews_service_type
@@ -122,7 +122,24 @@ spec:
           type: textarea
           value: repl{{ fromJson (ConfigOption "tls_json") | dig "cert" "Key" "" }}
           when: repl{{ ConfigOptionEquals "nginx_enabled" "1" }}
-    - name: ingress
-      title: Ingress
+    - name: slack
+      title: Slack Settings
       description: |
+        If desired, you can preconfigure the slack settings for SlackerNews. 
+        These are required for logging into SlackerNews and pulling/organizing content from your slack instance.
+        If you don't preconfigure these settings, you'll be prompted to configure them when you first access SlackerNews.
+        
+        Instructions on how to configure your slack application and collect these values can be found in [the SlackerNewa slack documentation](https://docs.slackernews.io/slack/).
       items:
+        - name: slack_bot_token
+          title: Slack Bot Token
+          type: password
+        - name: slack_user_token
+          title: Slack User Token
+          type: password
+        - name: slack_clientid
+          title: Slack Client ID
+          type: text
+        - name: slack_clientsecret
+          title: Slack Client Secret
+          type: password
