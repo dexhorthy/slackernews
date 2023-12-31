@@ -17,10 +17,10 @@ spec:
       password: repl{{ ConfigOption "postgres_password"}}
       uri: repl{{ ConfigOption "postgres_external_uri" }}
     slack:
-      botToken: repl{{ ConfigOption "slack_bot_token" }}
-      userToken: repl{{ ConfigOption "slack_user_token" }}
-      clientId: repl{{ ConfigOption "slack_clientid" }}
-      clientSecret: repl{{ ConfigOption "slack_clientsecret" }}
+      botToken: repl{{ ConfigOption "slack_bot_token" | quote }}
+      userToken: repl{{ ConfigOption "slack_user_token" | quote }}
+      clientId: repl{{ ConfigOption "slack_clientid" | quote }}
+      clientSecret: repl{{ ConfigOption "slack_clientsecret" | quote }}
     slackernews:
       domain: repl{{ ConfigOption "slackernews_domain" }}
     admin-console:
