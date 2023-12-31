@@ -20,6 +20,11 @@ ingress:
   ingressClassName: ""
 nginx:
   enabled: false
+  service:
+    type: ClusterIP
+    nodePort:
+      port:
+
 service:
   type: ClusterIP
   nodePort:

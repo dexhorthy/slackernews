@@ -17,5 +17,5 @@ spec:
 {{ end }}
   selector:
     app: slackernews-nginx
-  type: {{ .Values.service.type }}
+  type: {{ .Values.nginx.service.type }}
 {{ end }}

@@ -28,7 +28,16 @@ spec:
     replicated:
       enabled: false
       preflights: false
+    nginx:
+      enabled: repl{{ ConfigOption "nginx_enabled" | ParseBool }}
+      service:
+        type: repl{{ ConfigOption "nginx_service_type" }}
+        nodePort:
+          port: repl{{ ConfigOption "nginx_node_port_port" }}
     service:
+      type: repl{{ ConfigOption "slackernews_service_type" }}
+      nodePort:
+        port: repl{{ ConfigOption "slackernews_node_port_port" }}
       tls:
         enabled: true
         cert: |

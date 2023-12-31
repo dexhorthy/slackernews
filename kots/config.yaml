@@ -27,22 +27,76 @@ spec:
           title: Postgresql URI
           required: true
           when: repl{{ ConfigOptionEquals "deploy_postgres" "0"}}
-    - name: tls
-      title: TLS
+    - name: tls_and_ingress
+      title: TLS and Ingress
       description: |
-        This section has been pre-populated with domains and self-signed certificates. 
-        If you want, you can replace the self-signed certificates with your own.
+        You can customize how you will expose slackernews to the internet.
         Note that the domain you use will need to be publicly addressable with certs signed by a public authority 
         so it can receive webhooks from Slack.
         
-        If you'll be using your own ingress controller or external load balancer, use the DNS name or IP
-        of that external address.
+        Common configurations include
+            1. Using a Cluster IP and configuring your existing ingress controller to route traffic to slackernews
+            2. Using a NodePort and configuring an existing load balancer to route traffic to slackernews
+            3. Using a LoadBalancer service and letting Kubernetes provision a load balancer for you
+            4. Deploying the included nginx service to handle TLS and proxying traffic to slackernews, and exposing that with a ClusterIP, NodePort, or LoadBalancer
+        
+        If you choose option (4), you'll see that this page has been pre-populated with domains and self-signed certificates. 
+        If you want, you can replace the self-signed certificates with your own.
+        
+        If you'll be using your own ingress controller or external load balancer, use the DNS name of that external address.
+        
       items:
         - name: slackernews_domain
           title: Ingress Hostname
-          help_text: The domain name at which you'll access slackernews. Don't include the `https://` or any path
+          help_text: The domain name at which you'll access slackernews. Don't include the `https://` or any path elements.
           type: text
           required: true
+        - name: slackernews_service_type
+          title: Slackernews Service Type
+          type: select_one
+          options:
+            - name: ClusterIP
+              title: ClusterIP
+            - name: NodePort
+              title: NodePort
+            - name: LoadBalancer
+              title: LoadBalancer
+          default: ClusterIP
+        - name: slackernews_node_port_port
+          title: Slackernews Node Port
+          help_text: > 
+              (Optional) - The port to use for the NodePort service type. Leave this blank to have Kubernetes choose a port for you.
+          type: text
+          default: ""
+          when: repl{{ ConfigOptionEquals "slackernews_service_type" "NodePort" }}
+        - name: nginx_enabled
+          title: Enable Nginx
+          help_text: Deploy an nginx reverse proxy. Running nginx is required to customize the TLS configuration.
+          type: bool
+          default: "1"
+        - name: nginx_service_type
+          title: Nginx Service Type
+          help_text: > 
+              The service type to use for the nginx service. 
+              If you're using an external http or tcp load balancer, you should use NodePort. 
+              If you're running in a supported cloud provider and want Kubernetes to provision a Load Balancer, use LoadBalancer.
+          type: select_one
+          options:
+            - name: ClusterIP
+              title: ClusterIP
+            - name: NodePort
+              title: NodePort
+            - name: LoadBalancer
+              title: LoadBalancer
+          default: ClusterIP
+          when: repl{{ ConfigOptionEquals "nginx_enabled" "1" }}
+        - name: nginx_node_port_port
+          title: Nginx Node Port
+          help_text: > 
+              (Optional) - The port to use for the NodePort service type. Leave this blank to have Kubernetes choose a port for you.
+          type: text
+          default: ""
+          when: repl{{ and (ConfigOptionEquals "nginx_enabled" "1") (ConfigOptionEquals "nginx_service_type" "NodePort") }}
         - name: tls_json
           title: TLS JSON
           type: textarea
@@ -57,11 +111,18 @@ spec:
           title: Signing Authority
           type: textarea
           value: repl{{ fromJson (ConfigOption "tls_json") | dig "ca" "Cert" "" }}
+          when: repl{{ ConfigOptionEquals "nginx_enabled" "1" }}
         - name: tls_cert
           title: TLS Cert
           type: textarea
           value: repl{{ fromJson (ConfigOption "tls_json") | dig "cert" "Cert" "" }}
+          when: repl{{ ConfigOptionEquals "nginx_enabled" "1" }}
         - name: tls_key
           title: TLS Key
           type: textarea
           value: repl{{ fromJson (ConfigOption "tls_json") | dig "cert" "Key" "" }}
+          when: repl{{ ConfigOptionEquals "nginx_enabled" "1" }}
+    - name: ingress
+      title: Ingress
+      description: |
+      items:
