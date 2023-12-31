@@ -101,7 +101,7 @@ jobs:
         with:
           include: 'kots/slackernews-chart.yaml'
           find: '$IMAGE'
-          replace: 'proxy/${{ secrets.REPLICATED_APP }}/ghcr.io/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:${{ steps.get_version.outputs.version-without-v }}'
+          replace: 'ghcr.io/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:${{ steps.get_version.outputs.version-without-v }}'
           regex: false
 
       - id: package-helm-chart
