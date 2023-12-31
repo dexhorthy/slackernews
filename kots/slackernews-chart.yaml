@@ -23,6 +23,7 @@ spec:
       clientSecret: repl{{ ConfigOption "slack_clientsecret" | quote }}
     slackernews:
       domain: repl{{ ConfigOption "slackernews_domain" }}
+      adminUserEmails: repl{{ ConfigOption "slackernews_admin_user_emails" | quote }}
     admin-console:
       enabled: false
     replicated:

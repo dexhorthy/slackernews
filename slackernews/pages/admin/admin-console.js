@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import router, { useRouter } from 'next/router';
 import { loadSession } from "../../lib/session";
 import cookies from 'next-cookies';
+import { isSuperAdmin } from "../../lib/user";
 
 export default function Page({ isHelm, namespace , isReplicatedEnabled}) {
 
@@ -54,6 +55,7 @@ export async function getServerSideProps(ctx) {
       props:{},
     };
   }
+
 
   if (!sess.user.isSuperAdmin) {
     return {
