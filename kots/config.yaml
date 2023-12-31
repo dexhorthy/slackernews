@@ -144,3 +144,18 @@ spec:
         - name: slack_clientsecret
           title: Slack Client Secret
           type: password
+    - name: admin_users
+      title: Admin Users
+      description: |
+        For this section, you can specify a list of users that will be granted admin access to SlackerNews.
+        Provide a comma-separated list of email addresses for the users you want to grant admin access to.
+        Since SlackerNews users Slack for authentication, these email addresses must match the users' email addresses in Slack.
+
+        Users on this list will be able to access the `/admin` route, allowing them to manage content, users, and settings.
+        
+        For any users who receive admin permissions from this setting, the change will take effect the next time
+        they are active in the slackernews application.
+      items:
+        - name: slackernews_admin_user_emails
+          title: Admin Users
+          type: text

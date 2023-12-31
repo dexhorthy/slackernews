@@ -58,6 +58,8 @@ spec:
             value: "1"
           - name: INSTALL_METHOD
             value: helm
+          - name: SLACKERNEWS_ADMIN_USER_EMAILS
+            value: {{ .Values.slackernews.adminUserEmails | quote }}
           - name: KUBERNETES_NAMESPACE
             valueFrom:
               fieldRef:
