@@ -54,7 +54,7 @@ spec:
         - name: slackernews_service_type
           title: Slackernews Service Type
           type: select_one
-          options:
+          items:
             - name: ClusterIP
               title: ClusterIP
             - name: NodePort
@@ -81,7 +81,7 @@ spec:
               If you're using an external http or tcp load balancer, you should use NodePort. 
               If you're running in a supported cloud provider and want Kubernetes to provision a Load Balancer, use LoadBalancer.
           type: select_one
-          options:
+          items:
             - name: ClusterIP
               title: ClusterIP
             - name: NodePort
