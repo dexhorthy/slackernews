@@ -95,6 +95,7 @@ jobs:
           replace: 'proxy/${{ secrets.REPLICATED_APP }}/ghcr.io/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:${{ steps.get_version.outputs.version-without-v }}'
           regex: false
 
+
       # there has *got* to be a better way to do this
       - name: Update the KOTS HelmChart CR with a template for the full image path
         uses: jacobtomlinson/gha-find-replace@v2
