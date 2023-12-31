@@ -40,6 +40,7 @@ spec:
       items:
         - name: slackernews_domain
           title: Ingress Hostname
+          help_text: The domain name at which you'll access slackernews. Don't include the `https://` or any path
           type: text
           required: true
         - name: tls_json
