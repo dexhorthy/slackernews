@@ -435,3 +435,109 @@ In general, expand config screen to allow for customizing service types, and to 
            value: repl{{ fromJson (ConfigOption "tls_json") | dig "cert" "Key" "" }}
 +          when: repl{{ ConfigOptionEquals "nginx_enabled" "1" }}
 ```
+
+
+Related wiring into HelmChart CR:
+
+```diff
+kots/slackernews-chart.yaml
+
++    nginx:
++      enabled: repl{{ ConfigOption "nginx_enabled" | ParseBool }}
++      service:
++        type: repl{{ ConfigOption "nginx_service_type" }}
++        nodePort:
++          port: repl{{ ConfigOption "nginx_node_port_port" }}
+     service:
++      type: repl{{ ConfigOption "slackernews_service_type" }}
++      nodePort:
++        port: repl{{ ConfigOption "slackernews_node_port_port" }}
+       tls:
+         enabled: true
+         cert: |
+```
+
+Add K3s as a supported distro in Preflight Checks
+-----------------
+
+We test it in CMX, so it should probably be supported
+
+```diff
+charts/slackernews/templates/preflight.yaml
+
+           - pass:
+               when: "== eks"
+               message: EKS is a supported platform
++          - pass:
++              when: "== k3s"
++              message: K3s is a supported platform
+           - warn:
+               when: "== docker-desktop"
+               message: This application has not been tested on Docker Desktop
+           - warn:
+-              message: The Kubernetes platform is not validated, but there are no known compatibility issues.
++              message: This Kubernetes platform is not regularly tested, but there are no known compatibility issues.
+
+```
+
+Fix KOTS StatusInformers
+--------------------
+
+Remove api and migrations, add conditional informers for postgres and nginx. Also remove api and migrations from `images`. 
+
+```diff
+--- a/kots/replicated-app.yaml
++++ b/kots/replicated-app.yaml
+@@ -14,20 +14,13 @@ spec:
+       localPort: 80
+       applicationUrl: "http://slackernews-nginx"
+   statusInformers:
+-    - deployment/migrations
+-    - deployment/slackernews-api
+     - deployment/slackernews-frontend
+-    - deployment/slackernews-nginx
++    - '{{repl if ConfigOptionEquals "deploy_postgres" "1"}}statefulset/postgres{{repl end}}'
++    - '{{repl if ConfigOptionEquals "nginx_enabled" "1"}}deployment/nginx{{repl end}}'
+   graphs:
+     - title: DAU
+       query: 'sum(user_signup_events_total)'
+ images:
+-  slackernews_api:
+-    pullSecret: repl{{ ImagePullSecretName }}
+-    repository: ghcr.io/slackernews/slackernews-api
+-  slackernews_migrations:
+-    pullSecret: repl{{ ImagePullSecretName }}
+-    repository: ghcr.io/slackernews/slackernews-migrations
+```
+
+
+Fix a broken import, remove some unused imports
+-------------
+
+
+```diff
+@@ -1,9 +1,10 @@
+ import Layout from "../../components/layout";
+-import React, { useEffect, useState } from 'react';
++import React from 'react';
+ import "../../styles/Home.module.css";
+ import { loadSession } from "../../lib/session";
+ import cookies from 'next-cookies';
+-import { getLink, listShares } from "../../lib/share";
++import { listShares } from "../../lib/share";
++import { getLink } from "../../lib/link";
+ import Link from "next/link";
+ import Button from 'react-bootstrap/Button';
+
+```
+
+
+```diff
+@@ -1,6 +1,5 @@
+ import AdminLayout from "../../components/admin-layout";
+-import React, { useEffect, useState } from 'react';
+-import router, { useRouter } from 'next/router';
++import React from 'react';
+ import { loadSession } from "../../lib/session";
+ import cookies from 'next-cookies';
+```
