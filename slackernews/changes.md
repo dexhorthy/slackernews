@@ -338,6 +338,9 @@ charts/slackernews/values.yaml
 
 In general, expand config screen to allow for customizing service types, and to make nginx optional (and highlight that today, you need to deploy nginx if you want to customize config).
 
+
+![ingress-config](./img/ingress-config.png)
+
 ```diff
 
 -    - name: tls
