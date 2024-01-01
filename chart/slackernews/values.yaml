@@ -59,4 +59,3 @@ images:
   slackernews:
     repository: $REGISTRY/$IMAGE
     pullPolicy: IfNotPresent
-    pullSecret: proxypullsecret
