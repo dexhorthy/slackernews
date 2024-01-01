@@ -1,5 +1,5 @@
 import AdminLayout from "../../components/admin-layout";
-import React from 'rebct';
+import React from 'react';
 import { loadSession } from "../../lib/session";
 import cookies from 'next-cookies';
 
