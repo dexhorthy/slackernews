@@ -2,7 +2,7 @@ name: trivy
 
 on:
   workflow_run:
-    workflows: [development, release]
+    workflows: [release]
     types: [completed]
       
 env:
