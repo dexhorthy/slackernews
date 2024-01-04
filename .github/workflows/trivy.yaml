@@ -2,7 +2,7 @@ name: trivy
 
 on:
   workflow_run:
-    workflows: [development, release]
+    workflows: [release]
     types: [completed]
       
 env:
@@ -16,7 +16,7 @@ jobs:
       - name: Trivy Scan web
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:sha-${{ github.sha }}'
+          image-ref: '${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:sha-${{ github.event.workflow_run.id }}'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
