@@ -19,7 +19,7 @@ spec:
         - name: replicated-pull-secret
       {{ end }}
       containers:
-      - image: {{ .Values.images.slackernews.repository }}
+      - image: {{ .Values.images.slackernews.repository }}:{{ .Values.images.slackernews.tag }}
         imagePullPolicy: {{ .Values.images.slackernews.pullPolicy }}
         name: slackernews
         env:
@@ -66,6 +66,8 @@ spec:
                 fieldPath: metadata.namespace
           - name: REPLICATED_ENDPOINT
             value: "http://replicated:3000"
+          - name: SLACKERNEWS_VERSION
+            value: {{ .Values.images.slackernews.tag | quote }}
         ports:
         - containerPort: 3000
           name: http
