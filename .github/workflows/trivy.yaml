@@ -15,8 +15,12 @@ jobs:
     steps:
       - name: debug tags content
         run: echo ${{ github.event.workflow_run.outputs.tags }}
+      - name: debug tags content 2
+        run: echo ${{ github.event.workflow_run }}
       - id: get_version
         uses: battila7/get-version-action@v2
+      - name: debug get_version
+        run: echo ${{ steps.get_version.outputs.version-without-v }}
       - name: Trivy Scan web
         uses: aquasecurity/trivy-action@master
         with:
