@@ -134,7 +134,8 @@ export default function Layout(
           </div>
           <main style={{ paddingLeft: "24px", width: "100%" }}>{children}</main>
         </div>
-        <Footer slackernewsVersion={slackernewsVersion} hideSearch={true} />
+        <i style={{fontSize: "12px", textAlign: "center"}}>Slackernews version {slackernewsVersion}</i>
+        <Footer hideSearch={true} />
       </div>
     </>
   );
