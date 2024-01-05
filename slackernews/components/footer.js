@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useRouter } from 'next/router'
+import * as React from "react";
 
-export default function Footer({ hideSearch }) {
+export default function Footer({ hideSearch, slackernewsVersion }) {
   const [searchInput, setSearchInput] = useState("");
 
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function Footer({ hideSearch }) {
 
   return (
     <div className="container-fluid">
+      <i style={{fontSize: "12px"}}>Slackernews version {slackernewsVersion}</i>
       {hideSearch ? null : (
         <div className="row">
           <div className="col-12">
