@@ -28,7 +28,7 @@ jobs:
           # a safe assumption for now, but probably needs to be made more flexible over time
           # From what I can tell, ${{ secrets.GITHUB_TOKEN }} does not have sufficient permissions for this
           TRIVY_USERNAME: ${{ github.event.workflow_run.actor.login }}
-          TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          TRIVY_PASSWORD: ${{ secrets.GHCR_PAT }}
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         if: always()
