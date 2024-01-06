@@ -33,8 +33,9 @@ jobs:
           TRIVY_PASSWORD: ${{ secrets.GHCR_PAT }}
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
-        if: always()
+        if: always() # run even if the scan fails
         with:
           sarif_file: 'trivy-results.sarif'
-          ref: refs/tags/${{ github.event.workflow_run.head_branch }} # will be the tag used
-          sha: ${{ github.event.workflow_run.head_sha }}'
+          sha: ${{ github.event.workflow_run.head_sha }}
+          # the upstream workflow_run was triggered by a tag, so head_branch will be the tag
+          ref: refs/tags/${{ github.event.workflow_run.head_branch }}
