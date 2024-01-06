@@ -16,7 +16,7 @@ jobs:
       - name: Trivy Scan web
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:sha-${{ github.event.workflow_run.head_commit.id }}'
+          image-ref: '${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web:sha-${{ github.event.workflow_run.head_sha }}'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
@@ -27,6 +27,8 @@ jobs:
           # these creds assume that user associated with the configured GHCR_PAT # is the one creating the git tags that trigger releases
           # a safe assumption for now, but probably needs to be made more flexible over time
           # From what I can tell, ${{ secrets.GITHUB_TOKEN }} does not have sufficient permissions for this
+          # see https://github.com/slackernews/slackernews/issues/31#issuecomment-1879730820
+          # for more details
           TRIVY_USERNAME: ${{ github.event.workflow_run.actor.login }}
           TRIVY_PASSWORD: ${{ secrets.GHCR_PAT }}
       - name: Upload Trivy scan results to GitHub Security tab
@@ -34,3 +36,5 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+          ref: refs/tags/${{ github.event.workflow_run.head_branch }} # will be the tag used
+          sha: ${{ github.event.workflow_run.head_sha }}'
