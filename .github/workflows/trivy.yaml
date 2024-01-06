@@ -23,13 +23,12 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
           format: 'sarif'
           output: 'trivy-results.sarif'
-        # these creds assume that user associated with the configured GHCR_PAT
-        # is the one creating the git tags that trigger releases
-        # a safe assumption for now, but probably needs to be made more flexible over time
-        # From what I can tell, ${{ secrets.GITHUB_TOKEN }} does not have sufficient permissions for this
         env:
+          # these creds assume that user associated with the configured GHCR_PAT # is the one creating the git tags that trigger releases
+          # a safe assumption for now, but probably needs to be made more flexible over time
+          # From what I can tell, ${{ secrets.GITHUB_TOKEN }} does not have sufficient permissions for this
           TRIVY_USERNAME: ${{ github.event.workflow_run.actor.login }}
-          TRIVY_PASSWORD: ${{ secrets.GHCR_PAT }}
+          TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
