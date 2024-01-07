@@ -10,7 +10,7 @@ spec:
           url: https://api.slack.com/methods/api.test
     - postgres:
         collectorName: postgres
-        uri: {{repl if ConfigOptionEquals "deploy_postgres" "1"}}postgresql://slackernews:{{repl ConfigOption "postgres_password"}}@postgres:5432/slackernews{{repl else}}{{repl ConfigOption "postgres_external_uri"}}{{repl end}}
+        uri: '{{repl if ConfigOptionEquals "deploy_postgres" "1"}}postgresql://slackernews:{{repl ConfigOption "postgres_password"}}@postgres:5432/slackernews{{repl else}}{{repl ConfigOption "postgres_external_uri"}}{{repl end}}'
   analyzers:
     - postgres:
         checkName: Postgres Check
