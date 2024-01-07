@@ -13,9 +13,9 @@ spec:
         uri: >
           {{repl if ConfigOptionEquals "deploy_postgres" "1"}}
             postgresql://slackernews:{{repl ConfigOption "postgres_password"}}@postgres:5432/slackernews
-          {{else}}
+          {{repl else}}
             {{repl ConfigOption "postgres_external_uri"}}
-          {{end}}
+          {{repl end}}
 
   analyzers:
     - postgres:
