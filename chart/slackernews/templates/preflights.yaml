@@ -20,13 +20,11 @@ stringData:
             get:
               url: https://api.slack.com/methods/api.test
         - http:
-            exclude: {{ .Values.slack.userToken }}
             collectorName: helmValuesSlackUserToken
             post:
               url: https://slack.com/api/auth.test
               headers:
                 Authorization: Bearer {{.Values.slack.userToken}}
-
 
       analyzers:
         - clusterVersion:
@@ -64,4 +62,16 @@ stringData:
                   message: Cannot find a node with sufficient memory and cpu
               - pass:
                   message: Sufficient CPU and memory is available
+        - jsonCompare:
+            exclude: {{ not .Values.slack.userToken }}
+            fileName: helmValuesSlackUserToken.json
+            path: ok
+            value: true
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: Slack User token passed in helm values is not valid
+              - pass:
+                  message: Slack User Token valid
+
 {{ end }}

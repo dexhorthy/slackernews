@@ -20,7 +20,6 @@ stringData:
             get:
               url: https://api.slack.com/methods/api.test
         - http:
-            exclude: {{ .Values.slack.userToken }}
             collectorName: helmValuesSlackUserToken
             post:
               url: https://slack.com/api/auth.test
@@ -57,7 +56,7 @@ stringData:
             - pass:
                 message: Your cluster meets the recommended and quired versions of Kubernetes.
         - textAnalyze:
-            checkName: Axios Errors
+            checkName: HTTP errors in slackernews logs
             fileName: slackernews-frontend-*/slackernews.log
             regex: "error - AxiosError"
             outcomes:
