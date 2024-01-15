@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: slackernews-preflight-mypreflight
+  name: slackernews-preflight
   labels:
     troubleshoot.sh/kind: preflight
 stringData: 
@@ -9,7 +9,7 @@ stringData:
     apiVersion: troubleshoot.sh/v1beta2
     kind: Preflight
     metadata:
-      name: slackernews-preflight-mypreflight
+      name: slackernews-preflight
     spec:
       collectors:      
         - clusterInfo: {}
@@ -24,23 +24,12 @@ stringData:
               url: https://slack.com/api/auth.test
               headers:
                 Authorization: Bearer {{.Values.slack.userToken}}
-        - data:
-            name: example.json
-            data: |
-              {
-                "foo": "bar",
-                "stuff": {
-                  "foo": "bar",
-                  "bar": true
-                },
-                "morestuff": [
-                  {
-                    "foo": {
-                      "bar": true
-                    }
-                  }
-                ]
-              }
+        - http:
+            collectorName: helmValuesSlackBotToken
+            post:
+              url: https://slack.com/api/auth.test
+              headers:
+                Authorization: Bearer {{.Values.slack.botToken}}
       analyzers:
         - clusterVersion:
             outcomes:
@@ -77,28 +66,27 @@ stringData:
                   message: Cannot find a node with sufficient memory and cpu
               - pass:
                   message: Sufficient CPU and memory is available
-        - jsonCompare:
+        - textAnalyze:
+            exclude: {{ eq .Values.slack.userToken  "" }}
             checkName: Slack User Token
             fileName: helmValuesSlackUserToken.json
-            path: "ok"
-            value: |
-              true
+            regex: ok\\":true
             outcomes:
               - fail:
                   when: "false"
                   message: No Valid Slack User token in helm values
               - pass:
+                  when: "true"
                   message: Slack User Token valid
-        - jsonCompare:
-            checkName: Compare JSON Example again
-            fileName: example.json
-            path: "morestuff.[0].foo.bar"
-            value: |
-              true
+        - textAnalyze:
+            exclude: {{ eq .Values.slack.botToken  "" }}
+            checkName: Slack Bot Token
+            fileName: helmValuesSlackBotToken.json
+            regex: ok\\":true
             outcomes:
               - fail:
                   when: "false"
-                  message: The collected data does not match the value.
+                  message: No Valid Slack Bot token in helm values
               - pass:
                   when: "true"
-                  message: The collected data matches the value.
+                  message: Slack Bot Token valid
