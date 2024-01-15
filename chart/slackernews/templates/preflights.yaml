@@ -1,10 +1,9 @@
-{{ if ne .Values.replicated.preflights false }}
 apiVersion: v1
 kind: Secret
 metadata:
   name: slackernews-preflight-mypreflight
   labels:
-    troubleshoot.io/kind: preflight
+    troubleshoot.sh/kind: preflight
 stringData: 
   preflight.yaml: |- 
     apiVersion: troubleshoot.sh/v1beta2
@@ -19,7 +18,30 @@ stringData:
             collectorName: slack
             get:
               url: https://api.slack.com/methods/api.test
-      analyzers:      
+        - http:
+            collectorName: helmValuesSlackUserToken
+            post:
+              url: https://slack.com/api/auth.test
+              headers:
+                Authorization: Bearer {{.Values.slack.userToken}}
+        - data:
+            name: example.json
+            data: |
+              {
+                "foo": "bar",
+                "stuff": {
+                  "foo": "bar",
+                  "bar": true
+                },
+                "morestuff": [
+                  {
+                    "foo": {
+                      "bar": true
+                    }
+                  }
+                ]
+              }
+      analyzers:
         - clusterVersion:
             outcomes:
             - fail:
@@ -55,4 +77,28 @@ stringData:
                   message: Cannot find a node with sufficient memory and cpu
               - pass:
                   message: Sufficient CPU and memory is available
-{{ end }}
+        - jsonCompare:
+            checkName: Slack User Token
+            fileName: helmValuesSlackUserToken.json
+            path: "ok"
+            value: |
+              true
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: No Valid Slack User token in helm values
+              - pass:
+                  message: Slack User Token valid
+        - jsonCompare:
+            checkName: Compare JSON Example again
+            fileName: example.json
+            path: "morestuff.[0].foo.bar"
+            value: |
+              true
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: The collected data does not match the value.
+              - pass:
+                  when: "true"
+                  message: The collected data matches the value.
