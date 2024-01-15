@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: slackernews-preflight-mypreflight
+  name: slackernews-preflight
   labels:
     troubleshoot.io/kind: preflight
 stringData: 
@@ -10,7 +10,7 @@ stringData:
     apiVersion: troubleshoot.sh/v1beta2
     kind: Preflight
     metadata:
-      name: slackernews-preflight-mypreflight
+      name: slackernews-preflight
     spec:
       collectors:      
         - clusterInfo: {}
@@ -19,6 +19,21 @@ stringData:
             collectorName: slack
             get:
               url: https://api.slack.com/methods/api.test
+        # https://api.slack.com/methods/auth.test
+        - http:
+            exclude: {{ not .Values.slack.userToken }}
+            collectorName: slack-auth-user
+            post:
+              url: https://slack.com/api/auth.test
+              headers:
+                Authorization: Bearer {{ .Values.slack.userToken }}
+        - http:
+            exclude: {{ not .Values.slack.botToken }}
+            collectorName: slack-auth-bot
+            post:
+              url: https://slack.com/api/auth.test
+              headers:
+                Authorization: Bearer {{ .Values.slack.botToken }}
       analyzers:      
         - clusterVersion:
             outcomes:
@@ -55,4 +70,25 @@ stringData:
                   message: Cannot find a node with sufficient memory and cpu
               - pass:
                   message: Sufficient CPU and memory is available
+        - jsonCompare:
+            exclude: {{ not .Values.slack.userToken }}
+            checkName: Slack User Token
+            fileName: slack-auth-user.json
+            path: "ok"
+            value: true
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: "User Token Invalid"
+        - jsonCompare:
+            exclude: {{ not .Values.slack.botToken }}
+            checkName: Slack Bot Token
+            fileName: slack-auth-bot.json
+            path: "ok"
+            value: true
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: "Bot Token Invalid"
+
 {{ end }}

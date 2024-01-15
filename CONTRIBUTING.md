@@ -60,4 +60,3 @@ See [chart/slackernews/README.md](./chart/slackernews/README.md)
 
 ### Creating a replicated release
 
-
