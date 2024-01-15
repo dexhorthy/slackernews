@@ -19,7 +19,16 @@ stringData:
             collectorName: slack
             get:
               url: https://api.slack.com/methods/api.test
-      analyzers:      
+        - http:
+            exclude: {{ .Values.slack.userToken }}
+            collectorName: helmValuesSlackUserToken
+            post:
+              url: https://slack.com/api/auth.test
+              headers:
+                Authorization: Bearer {{.Values.slack.userToken}}
+
+
+      analyzers:
         - clusterVersion:
             outcomes:
             - fail:
