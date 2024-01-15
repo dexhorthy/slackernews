@@ -11,7 +11,7 @@ stringData:
     metadata:
       name: slackernews-support-bundle
     spec:
-      collectors:      
+      collectors:
         - clusterInfo: {}
         - clusterResources:
           namespace: {{ .Release.Namespace }}
@@ -41,7 +41,24 @@ stringData:
         - logs:
             selector:
               - app=postgres
-      analyzers:      
+        - data:
+            name: example.json
+            data: |
+              {
+                "foo": "bar",
+                "stuff": {
+                  "foo": "bar",
+                  "bar": true
+                },
+                "morestuff": [
+                  {
+                    "foo": {
+                      "bar": 123
+                    }
+                  }
+                ]
+              }
+      analyzers:
         - clusterVersion:
             outcomes:
             - fail:
@@ -88,3 +105,26 @@ stringData:
                   message: Cannot find a node with sufficient memory and cpu
               - pass:
                   message: Sufficient CPU and memory is available
+        - jsonCompare:
+            fileName: helmValuesSlackUserToken.json
+            path: ok
+            value: true
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: No Valid Slack User token in helm values
+              - pass:
+                  message: Slack User Token valid
+        - jsonCompare:
+            checkName: Compare JSON Example
+            fileName: example.json
+            path: "morestuff.[0].foo.bar"
+            value: |
+              123
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: The collected data does not match the value.
+              - pass:
+                  when: "true"
+                  message: The collected data matches the value.
