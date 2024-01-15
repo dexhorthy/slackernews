@@ -63,14 +63,13 @@ stringData:
               - pass:
                   message: Sufficient CPU and memory is available
         - jsonCompare:
-            exclude: {{ not .Values.slack.userToken }}
             fileName: helmValuesSlackUserToken.json
             path: ok
             value: true
             outcomes:
               - fail:
                   when: "false"
-                  message: Slack User token passed in helm values is not valid
+                  message: No Valid Slack User token in helm values
               - pass:
                   message: Slack User Token valid
 
