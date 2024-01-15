@@ -25,7 +25,23 @@ stringData:
               url: https://slack.com/api/auth.test
               headers:
                 Authorization: Bearer {{.Values.slack.userToken}}
-
+        - data:
+            name: example.json
+            data: |
+              {
+                "foo": "bar",
+                "stuff": {
+                  "foo": "bar",
+                  "bar": true
+                },
+                "morestuff": [
+                  {
+                    "foo": {
+                      "bar": 123
+                    }
+                  }
+                ]
+              }
       analyzers:
         - clusterVersion:
             outcomes:
@@ -72,5 +88,18 @@ stringData:
                   message: No Valid Slack User token in helm values
               - pass:
                   message: Slack User Token valid
+        - jsonCompare:
+            checkName: Compare JSON Example
+            fileName: example.json
+            path: "morestuff.[0].foo.bar"
+            value: |
+              123
+            outcomes:
+              - fail:
+                  when: "false"
+                  message: The collected data does not match the value.
+              - pass:
+                  when: "true"
+                  message: The collected data matches the value.
 
 {{ end }}
