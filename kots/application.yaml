@@ -23,5 +23,5 @@ spec:
     type: slackernews
     links:
       - description: Slackernews
-        url: "http://slackernews"
+        url: "http://slackernews-nginx"
 #      - description: Slackernews Admin

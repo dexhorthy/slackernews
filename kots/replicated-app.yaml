@@ -9,7 +9,7 @@ spec:
   allowRollback: true
   minKotsVersion: 1.79.0
   ports:
-    - serviceName: web
+    - serviceName: slackernews-nginx
       servicePort: 80
       localPort: 80
       applicationUrl: "http://slackernews-nginx"
