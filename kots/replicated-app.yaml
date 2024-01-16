@@ -11,7 +11,7 @@ spec:
   ports:
     - serviceName: slackernews-nginx
       servicePort: 80
-      localPort: 80
+      localPort: 8080
       applicationUrl: "http://slackernews-nginx"
   statusInformers:
     - deployment/slackernews
