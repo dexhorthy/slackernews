@@ -8,14 +8,14 @@ import envConfig from "../../lib/env-config";
 
 export default function Page({
   isConfiguredInEnv,
-  initialBotToken,
-  initialUserToken,
   initialClientId,
-  initialClientSecret,
   isReplicatedEnabled
 }) {
-  const [clientId, setClientId] = useState(initialClientId);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveErrorToast, setSaveErrorToast] = useState(null);
+  const [buttonError, setButtonError] = useState(false);
 
+  const [clientId, setClientId] = useState(initialClientId);
   const [botToken, setBotToken] = useState("");
   const [userToken, setUserToken] = useState("");
   const [clientSecret, setClientSecret] = useState("");
