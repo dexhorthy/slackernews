@@ -58,3 +58,9 @@ images:
   slackernews:
     repository: $REGISTRY/$IMAGE
     pullPolicy: IfNotPresent
+
+telemetry:
+  enabled: true
+
+cert-manager:
+  installCRDs: true

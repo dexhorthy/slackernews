@@ -1,6 +1,9 @@
 dependencies:
 - name: replicated
   repository: oci://chart.slackernews.io/library
-  version: 1.0.0-beta.6
-digest: sha256:3f0e2267c6f6199dca049076a9b62b80103d43a0fd52cdf7f09b1a105cf2297f
-generated: "2023-09-08T10:59:21.068158-06:00"
+  version: 1.0.0-beta.12
+- name: opentelemetry-operator
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.46.0
+digest: sha256:32c2810c602602abf5bc8aedfb1233284c6c331c2e1ca1d7351fb3c6c34f21ad
+generated: "2024-01-28T19:53:35.986019-06:00"
