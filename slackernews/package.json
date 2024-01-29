@@ -6,13 +6,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "NODE_ENV=test yarn playwright test --ui"
+    "test": "NODE_ENV=test yarn playwright test --ui",
+    "start:server": "node tracing.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-brands-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.40.3",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.48.0",
+    "@opentelemetry/resources": "^1.21.0",
+    "@opentelemetry/sdk-node": "^0.48.0",
+    "@opentelemetry/semantic-conventions": "^1.21.0",
     "@rjsf/core": "^5.0.0-beta.6",
     "@rjsf/utils": "^5.0.0-beta.6",
     "@rjsf/validator-ajv6": "^5.0.0-beta.6",
