@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "ecr_push_policy" {
-  name        = "ECRPushAccess"
+  name        = "ECRPushAccessForSlackerNewsMarketplace"
   description = "Policy that allows pushing images to ECR repositories"
 
   policy = <<EOF
@@ -28,7 +28,7 @@ EOF
 }
 
 resource "aws_iam_user" "ecr_push_user" {
-  name = "ecr-push-user"
+  name = "ecr-slackernews-marketplace-push-user"
 }
 
 resource "aws_iam_user_policy_attachment" "attach_ecr_push_policy" {
