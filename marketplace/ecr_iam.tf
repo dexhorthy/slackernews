@@ -8,7 +8,9 @@ resource "aws_iam_policy" "ecr_token_policy" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = "ecr:GetAuthorizationToken"
+        Action    = [
+          "ecr:*",
+        ]
         Resource = "*"
       },
     ]

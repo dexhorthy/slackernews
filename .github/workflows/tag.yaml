@@ -42,7 +42,7 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          registry: ${{ env.ECR_REGISTRY }}
+          registry: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_SLACKERNEWS }}
 
       ###################
       # Image Metadata
