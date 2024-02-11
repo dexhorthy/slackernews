@@ -9,7 +9,7 @@ resource "aws_iam_policy" "ecr_token_policy" {
       {
         Effect   = "Allow"
         Action    = [
-          "ecr:*",
+          "ecr:GetAuthorizationToken"
         ]
         Resource = "*"
       },
@@ -28,8 +28,10 @@ resource "aws_iam_policy" "ecr_repo_policy" {
       {
         Effect    = "Allow"
         Action    = [
+          "ecr:BatchGetImage",
           "ecr:BatchCheckLayerAvailability",
           "ecr:CompleteLayerUpload",
+          "ecr:GetDownloadUrlForLayer",
           "ecr:InitiateLayerUpload",
           "ecr:PutImage",
           "ecr:UploadLayerPart"

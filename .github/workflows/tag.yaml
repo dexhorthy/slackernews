@@ -40,9 +40,7 @@ jobs:
           aws-region: ${{ env.ECR_AWS_REGION }}
 
       - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registry: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_SLACKERNEWS }}
+        run: aws ecr get-login-password --region ${{ env.ECR_AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
 
       ###################
       # Image Metadata
@@ -208,12 +206,9 @@ jobs:
           aws-region: ${{ env.ECR_AWS_REGION }}
 
       - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        run: aws ecr get-login-password --region ${{ env.ECR_AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
 
       - name: Package and push helm chart to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: $${{ env.ECR_REPOSITORY_SLACKERNEWS_CHART }}
         run: |
-          helm push ./chart/slackernews-${{ steps.get_version.outputs.version-without-v }}.tgz oci://$REGISTRY
+          helm push ./chart/slackernews-${{ steps.get_version.outputs.version-without-v }}.tgz \
+              oci://${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_SLACKERNEWS_CHART }}
