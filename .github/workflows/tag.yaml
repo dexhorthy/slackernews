@@ -6,6 +6,11 @@ on:
     - "v*.*.*"
 env:
   REGISTRY: ghcr.io
+  ECR_AWS_REGION: us-east-1
+  ECR_REGISTRY: 709825985650.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REPOSITORY_SLACKERNEWS: slackernews/slackernews
+  ECR_REPOSITORY_SLACKERNEWS_NGINX: slackernews/slackernews-nginx
+
 
 jobs:
   build:
@@ -15,9 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      ###################
+      # Registry login
+      #
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
@@ -25,6 +34,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      ###################
+      # Image Metadata
+      #
       - name: Extract metadata (tags, labels) for web image
         id: web-meta
         uses: docker/metadata-action@v4
