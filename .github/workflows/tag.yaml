@@ -187,5 +187,5 @@ jobs:
 
       - name: Package and push helm chart to Amazon ECR
         run: |
-          helm push ./chart/slackernews-${{ steps.get_version.outputs.version-without-v }}.tgz \
-              oci://${{ env.ECR_REGISTRY }}/slackernews
+          helm push --debug ./chart/slackernews-${{ steps.get_version.outputs.version-without-v }}.tgz \
+              oci://${{ env.ECR_REGISTRY }}/slackernews/slackernews-chart
