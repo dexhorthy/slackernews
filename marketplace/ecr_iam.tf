@@ -38,7 +38,8 @@ resource "aws_iam_policy" "ecr_repo_policy" {
         ]
         Resource = [
           "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/slackernews",
-          "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/slackernews-chart",
+          "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/chart/slackernews",
+          "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/charts/slackernews",
           "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/slackernews-nginx"
         ]
       },
