@@ -56,22 +56,9 @@ jobs:
                 type=ref,event=branch
                 type=ref,event=tag
                 type=ref,event=pr
-          images: ${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web
-
-      - name: Extract metadata (tags, labels) for slackernews web image
-        id: meta-slackernews-ecr
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_SLACKERNEWS }}
-          tags: |
-            type=sha,format=long
-            type=schedule
-            type=semver,pattern={{version}}
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            
-
+          images:  |
+              ${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web
+              ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_SLACKERNEWS }}
       - uses: int128/docker-build-cache-config-action@v1
         id: cache
         with:
@@ -87,18 +74,6 @@ jobs:
           push: true
           cache-from: ${{ steps.cache.outputs.cache-from }}
           cache-to: ${{ steps.cache.outputs.cache-to }}
-
-      - name: Build and push slackernews web Docker image to Amazon ECR
-        uses: docker/build-push-action@v4
-        with:
-          context: ./slackernews
-          tags: ${{ steps.meta-slackernews-ecr.outputs.tags }}
-          labels: ${{ steps.meta-slackernews-ecr.outputs.labels }}
-          file: ./deploy/Dockerfile.web
-          push: true
-          cache-from: ${{ steps.cache.outputs.cache-from }}
-          cache-to: ${{ steps.cache.outputs.cache-to }}
-
 
       - name: Build nginx image
         uses: docker/build-push-action@v4
@@ -206,7 +181,9 @@ jobs:
           aws-region: ${{ env.ECR_AWS_REGION }}
 
       - name: Login to Amazon ECR
-        run: aws ecr get-login-password --region ${{ env.ECR_AWS_REGION }} | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com
+        run: |
+          aws ecr get-login-password --region ${{ env.ECR_AWS_REGION }} | \
+          helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Package and push helm chart to Amazon ECR
         run: |
