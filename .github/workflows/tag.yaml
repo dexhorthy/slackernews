@@ -58,8 +58,8 @@ jobs:
                 type=ref,event=pr
           images:  |
               ${{ env.REGISTRY }}/${{ secrets.GHCR_NAMESPACE }}/slackernews-web
-              ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_SLACKERNEWS }}
-              ${{ env.ECR_REGISTRY }}/byol/${{ env.ECR_REPOSITORY_SLACKERNEWS }}
+              ${{ env.ECR_REGISTRY }}/slackernews/slackernews
+              ${{ env.ECR_REGISTRY }}/slackernews/byol/slackernews
       - uses: int128/docker-build-cache-config-action@v1
         id: cache
         with:
@@ -190,9 +190,9 @@ jobs:
         # you'll be glad later that you left in the --debug flag to `helm push` :)
         run: |
           helm push --debug ./chart/slackernews-${{ steps.get_version.outputs.version-without-v }}.tgz \
-              oci://${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_SLACKERNEWS_CHART }}
+              oci://${{ env.ECR_REGISTRY }}/slackernews/chart
 
       - name: Package and push BYOL helm chart to Amazon ECR
         run: |
           helm push --debug ./chart/slackernews-${{ steps.get_version.outputs.version-without-v }}.tgz \
-              oci://${{ env.ECR_REGISTRY }}/byol/${{ env.ECR_REPOSITORY_SLACKERNEWS_CHART }}
+              oci://${{ env.ECR_REGISTRY }}/slackernews/byol/chart
