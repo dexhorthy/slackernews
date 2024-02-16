@@ -28,6 +28,7 @@ resource "aws_iam_policy" "ecr_repo_policy" {
       {
         Effect    = "Allow"
         Action    = [
+          "ecr:ListImages",
           "ecr:BatchGetImage",
           "ecr:BatchCheckLayerAvailability",
           "ecr:CompleteLayerUpload",
@@ -39,7 +40,8 @@ resource "aws_iam_policy" "ecr_repo_policy" {
         Resource = [
           "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/slackernews",
           "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/chart/slackernews",
-          "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/charts/slackernews",
+          "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/byol/slackernews",
+          "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/byol/chart/slackernews",
           "arn:aws:ecr:us-east-1:709825985650:repository/slackernews/slackernews-nginx"
         ]
       },
@@ -55,6 +57,11 @@ resource "aws_iam_user_policy_attachment" "attach_ecr_token_policy" {
 
 resource "aws_iam_user_policy_attachment" "attach_ecr_repo_policy" {
   user       = aws_iam_user.ecr_push_user.name
+  policy_arn = aws_iam_policy.ecr_repo_policy.arn
+}
+
+resource "aws_iam_user_policy_attachment" "attach_dex_ecr_policy" {
+  user       = "dex"
   policy_arn = aws_iam_policy.ecr_repo_policy.arn
 }
 
