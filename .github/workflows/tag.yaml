@@ -93,8 +93,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: make chart
-
       - id: get_version
         uses: battila7/get-version-action@v2
 
@@ -196,3 +194,34 @@ jobs:
         run: |
           helm push --debug ./chart/slackernews-${{ steps.get_version.outputs.version-without-v }}.tgz \
               oci://${{ env.ECR_REGISTRY }}/slackernews/byol/chart
+
+  create-marketplace-version:
+    runs-on: ubuntu-22.04
+    needs:
+      - release
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.ECR_AWS_REGION }}
+
+      - name: template marketplace JSON with version label
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: 'marketplace/new_aws_marketplace_revision.json'
+          find: '$VERSION'
+          replace: '${{ steps.get_version.outputs.version-without-v }}'
+          regex: false
+
+      - name: publish marketplace release
+        run: |
+          aws marketplace-catalog start-change-set --cli-input-json ./marketplace/new_aws_marketplace_revision.json
+          
+
