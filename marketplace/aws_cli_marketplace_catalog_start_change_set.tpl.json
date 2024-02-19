@@ -8,12 +8,6 @@
                 "Type": "ContainerProduct@1.0",
                 "Identifier": "prod-6ba3bp2fsgfo2@4"
             },
-            "EntityTags": [
-                {
-                    "Key": "Actor",
-                    "Value": "GitHub Actions"
-                }
-            ],
             "DetailsDocument": {
                 "Version": {
                     "ReleaseNotes": "Draft release of Slackernews Community",

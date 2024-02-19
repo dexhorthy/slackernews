@@ -197,6 +197,7 @@ jobs:
 
   create-marketplace-version:
     runs-on: ubuntu-22.04
+    timeout-minutes: 10 # we poll for completion at the end, so put a reasonable timeout here. Probably a dumb use of GHA runner minutes, but curious to see if this works.
     needs:
       - release
     steps:
@@ -215,13 +216,24 @@ jobs:
       - name: template marketplace JSON with version label
         uses: jacobtomlinson/gha-find-replace@v2
         with:
-          include: 'marketplace/new_aws_marketplace_revision.json'
+          include: 'marketplace/aws_cli_marketplace_catalog_start_change_set.tpl.json'
           find: '$VERSION'
           replace: '${{ steps.get_version.outputs.version-without-v }}'
           regex: false
 
       - name: publish marketplace release
         run: |
-          aws marketplace-catalog start-change-set --cli-input-json ./marketplace/new_aws_marketplace_revision.json
+          aws marketplace-catalog start-change-set --cli-input-json file://marketplace/aws_cli_marketplace_catalog_start_change_set.tpl.json
+          
+      - name: poll until change set is complete
+        run: |
+          change_status=""
+          until [ "$status" = "SUCCEEDED" ] || [ "$status" = "FAILED" ]; do            
+          status=$(aws marketplace-catalog list-change-sets \
+              --cli-input-json file://marketplace/aws_cli_marketplace_catalog_list_change_sets.json \
+              | jq '.ChangeSetSummaryList[0] | .Status' -r)
+            echo "Change set status: $change_status"
+            sleep 30
+          done
           
 
