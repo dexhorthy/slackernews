@@ -1,0 +1,111 @@
+{
+    "Catalog": "AWSMarketplace",
+    "ChangeSetName": "Publish Slackernews $VERSION",
+    "ChangeSet": [
+        {
+            "ChangeType": "AddDeliveryOptions",
+            "Entity": {
+                "Type": "ContainerProduct@1.0",
+                "Identifier": "prod-6ba3bp2fsgfo2@4"
+            },
+            "EntityTags": [
+                {
+                    "Key": "Actor",
+                    "Value": "GitHub Actions"
+                }
+            ],
+            "DetailsDocument": {
+                "Version": {
+                    "ReleaseNotes": "Draft release of Slackernews Community",
+                    "VersionTitle": "slackernews-draft-$VERSION"
+                },
+                "DeliveryOptions": [
+                    {
+                        "Details": {
+                            "HelmDeliveryOptionDetails": {
+                                "CompatibleServices": [
+                                    "EKS",
+                                    "EKS-Anywhere"
+                                ],
+                                "ContainerImages": [
+                                    "709825985650.dkr.ecr.us-east-1.amazonaws.com/slackernews/slackernews:$VERSION"
+                                ],
+                                "Description": "Slackernews Community Edition Helm Install",
+                                "UsageInstructions": "Follow https://docs.slackernews.io/helm/ and https://docs.slackernews.io/domain/ and https://docs.slackernews.io/slack/",
+                                "HelmChartUri": "709825985650.dkr.ecr.us-east-1.amazonaws.com/slackernews/chart/slackernews:$VERSION",
+                                "ReleaseName": "slackernews",
+                                "Namespace": "slackernews",
+                                "MarketplaceServiceAccountName": "slackernews",
+                                "OverrideParameters": [
+                                    {
+                                        "Key": "slackernews.domain",
+                                        "id": "591e4617-1a01-4c72-93bf-03900a6d0147",
+                                        "Metadata": {
+                                            "Label": "SlackerNewsDomain",
+                                            "Description": "https://docs.slackernews.io/domain/",
+                                            "Obfuscate": false
+                                        }
+                                    },
+                                    {
+                                        "Key": "slack.userToken",
+                                        "id": "b46b8712-0fff-44ac-9088-c74e9b901e9b",
+                                        "Metadata": {
+                                            "Label": "SlackUserToken",
+                                            "Description": "https://docs.slackernews.io/slack/",
+                                            "Obfuscate": true
+                                        }
+                                    },
+                                    {
+                                        "Key": "slack.botToken",
+                                        "id": "2c292acd-7f82-4443-8545-e453862dcbe0",
+                                        "Metadata": {
+                                            "Label": "SlackBotToken",
+                                            "Description": "https://docs.slackernews.io/slack/",
+                                            "Obfuscate": true
+                                        }
+                                    },
+                                    {
+                                        "Key": "slack.clientId",
+                                        "id": "93db0685-828d-4e30-b813-344cf3e180e9",
+                                        "Metadata": {
+                                            "Label": "SlackClientID",
+                                            "Description": "https://docs.slackernews.io/slack/",
+                                            "Obfuscate": false
+                                        }
+                                    },
+                                    {
+                                        "Key": "slack.clientSecret",
+                                        "id": "69e85a49-b374-4e53-8dfa-f957430f6fc8",
+                                        "Metadata": {
+                                            "Label": "SlackClientSecret",
+                                            "Description": "https://docs.slackernews.io/slack/",
+                                            "Obfuscate": true
+                                        }
+                                    },
+                                    {
+                                        "Key": "slackernews.adminUserEmails",
+                                        "id": "4ba01ad4-82e9-4b0e-a361-82edf6693541",
+                                        "Metadata": {
+                                            "Label": "SlackerNewsAdminUserEmails",
+                                            "Description": "A list of comma-separated email addresses to which to grant admin privileges. Should match the user's primary email in slack",
+                                            "Obfuscate": false
+                                        }
+                                    }
+                                ],
+                                "QuickLaunchEnabled": true
+                            }
+                        },
+                        "DeliveryOptionTitle": "Slackernews Community Edition Helm Install"
+                    }
+                ]
+            }
+        }
+    ],
+    "ClientRequestToken": "slackernews-version-$VERSION",
+    "ChangeSetTags": [
+        {
+            "Key": "Actor",
+            "Value": "GitHub Actions"
+        }
+    ]
+}
