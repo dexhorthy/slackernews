@@ -64,6 +64,7 @@ resource "aws_iam_policy" "marketplace_changeset_policy" {
           "aws-marketplace:DescribeEntity",
           "aws-marketplace:StartChangeSet",
           "aws-marketplace:ListEntities",
+          "aws-marketplace:TagResource",
           "aws-marketplace:DescribeChangeSet",
         ]
         Resource = [

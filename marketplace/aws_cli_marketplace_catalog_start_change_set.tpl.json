@@ -6,7 +6,7 @@
             "ChangeType": "AddDeliveryOptions",
             "Entity": {
                 "Type": "ContainerProduct@1.0",
-                "Identifier": "prod-6ba3bp2fsgfo2@4"
+                "Identifier": "prod-6ba3bp2fsgfo2"
             },
             "DetailsDocument": {
                 "Version": {
